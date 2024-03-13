@@ -1,6 +1,5 @@
 package com.example.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.data.datasource.BookDateSource
@@ -14,7 +13,6 @@ class SearchPagingSource (
     private val bookDataSource: BookDateSource,
 ) : PagingSource<Int,BookModel>(){
     override fun getRefreshKey(state: PagingState<Int, BookModel>): Int? {
-        Log.e("","페이징 리프레시")
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
@@ -22,23 +20,19 @@ class SearchPagingSource (
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BookModel> {
-        Log.e("","페이징 진입4")
         return try{
-            Log.e("","페이징 진입5")
             val currentPage = params.key ?: 1
             val bookList = bookDataSource.searchBook(
                 query = query,
                 page = currentPage.toString()
             ).toDomain()
             if(bookList.books.isNotEmpty()){
-                Log.e("","페이징 진입6")
                 LoadResult.Page(
                     data = bookList.books,
                     prevKey = if(currentPage == 1) null else currentPage - 1,
                     nextKey = if(bookList.books.isEmpty()) null else currentPage + 1
                 )
             } else {
-                Log.e("","페이징 진입7")
                 LoadResult.Page(
                     data = emptyList(),
                     prevKey = null,
@@ -46,10 +40,8 @@ class SearchPagingSource (
                 )
             }
         } catch (exception: IOException) {
-            Log.e("","페이징 에러1 ${exception}")
             return LoadResult.Error(exception)
         } catch (exception: HttpException) {
-            Log.e("","페이징 에러2 ${exception}")
             return LoadResult.Error(exception)
         }
     }

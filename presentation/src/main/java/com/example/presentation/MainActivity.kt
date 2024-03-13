@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import com.example.presentation.theme.BookSearchProjectTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -16,6 +17,9 @@ class MainActivity: ComponentActivity() {
         mainViewModel.searchBook(query = "search")
         mainViewModel.getDetailBook(isbn13 = "9781617294136")
         setContent{
+            BookSearchProjectTheme{
+                Search(onBookClick = {})
+            }
 
         }
     }
