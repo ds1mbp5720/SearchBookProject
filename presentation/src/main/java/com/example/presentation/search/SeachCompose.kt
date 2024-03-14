@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -56,12 +57,12 @@ fun SearchBar(
     onSearchFocusChange: (Boolean) -> Unit,
     onClearQuery: () -> Unit,
     searching: Boolean,
+    listChange: () -> Unit,
     modifier: Modifier = Modifier
 ){
     val keyboardController = LocalSoftwareKeyboardController.current
     MainSurface(
         modifier = modifier
-            .fillMaxWidth()
             .height(56.dp)
             .padding(horizontal = 24.dp, vertical = 8.dp)
     ){
@@ -97,6 +98,16 @@ fun SearchBar(
                             onSearchFocusChange(it.isFocused)
                         }
                 )
+                if(searching){
+                    CircularProgressIndicator(
+                        color = BookSearchTheme.colors.textPrimary,
+                        modifier = Modifier
+                            .padding(horizontal = 6.dp)
+                            .size(36.dp)
+                    )
+                } else{
+                    Spacer(modifier = Modifier.width(48.dp))
+                }
                 if(searchFocused) {
                     IconButton(
                         onClick = {
@@ -111,15 +122,14 @@ fun SearchBar(
                         )
                     }
                 }
-                if(searching){
-                    CircularProgressIndicator(
-                        color = BookSearchTheme.colors.textPrimary,
-                        modifier = Modifier
-                            .padding(horizontal = 6.dp)
-                            .size(36.dp)
+                IconButton(
+                    modifier = Modifier,
+                    onClick = listChange) {
+                    Icon(
+                        imageVector = Icons.Outlined.Settings,
+                        tint = MaterialTheme.colorScheme.primary,
+                        contentDescription = "list_type"
                     )
-                } else{
-                    Spacer(modifier = Modifier.width(48.dp))
                 }
             }
         }
