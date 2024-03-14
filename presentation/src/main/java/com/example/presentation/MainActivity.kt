@@ -14,11 +14,9 @@ class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainViewModel.getNewBookList()
-        mainViewModel.searchBook(query = "search")
-        mainViewModel.getDetailBook(isbn13 = "9781617294136")
         setContent{
             BookSearchProjectTheme{
-                Search(onBookClick = {})
+                MainScreen(onBookClick = {})
             }
 
         }

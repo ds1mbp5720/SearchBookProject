@@ -7,7 +7,7 @@ import com.example.domain.model.SearchModel
 object SearchMapper {
     fun toDomain(data: SearchData): SearchModel {
         val bookList = mutableListOf<BookModel>()
-        data.books.forEach {
+        data.books?.forEach {
             bookList.add(it.toDomain())
         }
         return SearchModel(

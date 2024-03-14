@@ -35,7 +35,6 @@ class MainViewModel @Inject constructor(
             bookRepository.searchBook(query = query)
                 .cachedIn(viewModelScope)
                 .collect{
-                    Log.e("","페이징 체크2 ${it}")
                     _searchBookList.emit(it)
                 }
         }
