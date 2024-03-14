@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -32,15 +33,25 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.example.presentation.R
 import com.example.presentation.component.MainSurface
-import com.example.presentation.mirroringBackIcon
 import com.example.presentation.theme.BookSearchTheme
+import com.example.presentation.utils.mirroringBackIcon
 
+/**
+ * 상단 검색어 Bar
+ *     query: 입력 전 검색어
+ *     onQueryChange: 입력 후 검색어 (입력에 따른 값 갱신)
+ *     onSearch: () -> Unit,  검색 api 호출
+ *     searchFocused, 검색 동작 여부
+ *     onSearchFocusChange: (Boolean) -> Unit,
+ *     onClearQuery: () -> Unit, 검색어 지우기
+ *     searching: Boolean, 검색중 progress 동작용 변수
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchBar(
     query: TextFieldValue,
     onQueryChange: (TextFieldValue) -> Unit,
-    onSearch: () -> Unit,
+    onSearch: () -> Unit, // 검색 api 호출
     searchFocused: Boolean,
     onSearchFocusChange: (Boolean) -> Unit,
     onClearQuery: () -> Unit,
@@ -49,15 +60,16 @@ fun SearchBar(
 ){
     val keyboardController = LocalSoftwareKeyboardController.current
     MainSurface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
+            .height(56.dp)
+            .padding(horizontal = 24.dp, vertical = 8.dp)
     ){
         Box(modifier = Modifier.fillMaxSize()){
-            if(query.text.isEmpty()) SearchHint()
+            if(query.text.isEmpty()) SearchHint(Modifier.align(Alignment.Center))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .fillMaxSize()
                     .wrapContentHeight()
             ){
                 if(searchFocused) {
@@ -94,14 +106,14 @@ fun SearchBar(
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Search,
-                            tint = BookSearchTheme.colors.iconPrimary,
+                            tint = BookSearchTheme.colors.iconSecondary,
                             contentDescription = ""
                         )
                     }
                 }
                 if(searching){
                     CircularProgressIndicator(
-                        color = BookSearchTheme.colors.iconPrimary,
+                        color = BookSearchTheme.colors.textPrimary,
                         modifier = Modifier
                             .padding(horizontal = 6.dp)
                             .size(36.dp)
@@ -113,13 +125,15 @@ fun SearchBar(
         }
     }
 }
+
+/**
+ * 검색어 입력 전 간단한 표시 view
+ */
 @Composable
-fun SearchHint(){
+fun SearchHint(modifier: Modifier){
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize()
+        modifier = modifier.wrapContentSize()
     ){
         Icon(
             imageVector = Icons.Outlined.Search,

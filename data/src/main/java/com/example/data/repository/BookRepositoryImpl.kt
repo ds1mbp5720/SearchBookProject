@@ -23,7 +23,7 @@ class BookRepositoryImpl @Inject constructor(
 ): BookRepository{
     override fun searchBook(query: String): Flow<PagingData<BookModel>> {
         return Pager(
-            config = PagingConfig(pageSize = 1/* prefetchDistance = 20, maxSize = 200*/), // 값 조정
+            config = PagingConfig(pageSize = 1000), // 값 조정
             pagingSourceFactory = {
                 SearchPagingSource(query = query, bookDataSource = bookDateSource) }
         ).flow

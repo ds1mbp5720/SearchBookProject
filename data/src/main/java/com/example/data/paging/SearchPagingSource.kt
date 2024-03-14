@@ -26,11 +26,11 @@ class SearchPagingSource (
                 query = query,
                 page = currentPage.toString()
             ).toDomain()
-            if(bookList.books.isNotEmpty()){
+            if(bookList.books?.isNotEmpty() == true){
                 LoadResult.Page(
-                    data = bookList.books,
+                    data = bookList.books!!,
                     prevKey = if(currentPage == 1) null else currentPage - 1,
-                    nextKey = if(bookList.books.isEmpty()) null else currentPage + 1
+                    nextKey = if(bookList.books!!.isEmpty()) null else currentPage + 1
                 )
             } else {
                 LoadResult.Page(
