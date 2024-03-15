@@ -31,6 +31,6 @@ data class BookDetailData(
     val image: String,
     @SerializedName("url")
     val url: String,
-    @SerializedName("pdf")
-    val pdf: List<String>, // okhttp로그 확인
+    @SerializedName("language")
+    val language: String
 )

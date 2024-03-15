@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.example.presentation.theme.BookSearchProjectTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,10 +14,7 @@ class MainActivity: ComponentActivity() {
         super.onCreate(savedInstanceState)
         mainViewModel.getNewBookList()
         setContent{
-            BookSearchProjectTheme{
-                MainScreen(onBookClick = {})
-            }
-
+            BookSearchAppCompose()
         }
     }
 }

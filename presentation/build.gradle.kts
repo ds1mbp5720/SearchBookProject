@@ -70,6 +70,10 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:4.11.0")
     implementation("com.github.bumptech.glide:compose:1.0.0-alpha.1")
 
+    implementation("androidx.lifecycle:lifecycle-common-java8:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha01")
+
     //paging
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
     implementation("androidx.paging:paging-compose:3.3.0-alpha02")

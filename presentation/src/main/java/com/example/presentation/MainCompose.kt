@@ -2,11 +2,13 @@ package com.example.presentation
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +16,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.List
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -46,7 +54,7 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     onBookClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = viewModel()
+    viewModel: MainViewModel
 ) {
     val coroutine = rememberCoroutineScope()
     val context = LocalContext.current
@@ -60,9 +68,10 @@ fun MainScreen(
     var listType by remember { mutableStateOf(false) }
     Column {
         Spacer(modifier = Modifier.statusBarsPadding())
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
         ){
             SearchBar(
                 query = viewModel.searchState.query,
@@ -75,15 +84,24 @@ fun MainScreen(
                 searchFocused = viewModel.searchState.focused || viewModel.searchState.query.text != "",
                 onSearchFocusChange = {viewModel.searchState.focused = it},
                 onClearQuery = {viewModel.searchState.query = TextFieldValue("") },
-                searching = viewModel.searchState.searching,
-                listChange = {
+                searching = viewModel.searchState.searching
+            )
+            IconButton(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd),
+                onClick = {
                     listType = !listType
                     coroutine.launch {
                         listState.scrollToItem(0)
                         gridState.scrollToItem(0)
-                    }
-                }
-            )
+                    } }
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.List,
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = "list_type"
+                )
+            }
         }
         // 검색 결과 flow 동작 상태
         LaunchedEffect(key1 = searchBookList.loadState ){

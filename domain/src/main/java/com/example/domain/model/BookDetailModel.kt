@@ -15,5 +15,5 @@ data class BookDetailModel(
     val price: String,
     val image: String,
     val url: String,
-    val pdf: List<String>, // okhttp로그 확인
+    val language: String
 )

@@ -57,14 +57,12 @@ fun SearchBar(
     onSearchFocusChange: (Boolean) -> Unit,
     onClearQuery: () -> Unit,
     searching: Boolean,
-    listChange: () -> Unit,
     modifier: Modifier = Modifier
 ){
     val keyboardController = LocalSoftwareKeyboardController.current
     MainSurface(
         modifier = modifier
-            .height(56.dp)
-            .padding(horizontal = 24.dp, vertical = 8.dp)
+            .padding(horizontal = 48.dp, vertical = 8.dp)
     ){
         Box(modifier = Modifier.fillMaxSize()){
             if(query.text.isEmpty()) SearchHint(Modifier.align(Alignment.Center))
@@ -121,15 +119,6 @@ fun SearchBar(
                             contentDescription = ""
                         )
                     }
-                }
-                IconButton(
-                    modifier = Modifier,
-                    onClick = listChange) {
-                    Icon(
-                        imageVector = Icons.Outlined.Settings,
-                        tint = MaterialTheme.colorScheme.primary,
-                        contentDescription = "list_type"
-                    )
                 }
             }
         }

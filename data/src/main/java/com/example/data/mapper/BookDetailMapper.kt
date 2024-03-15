@@ -21,7 +21,7 @@ object BookDetailMapper {
             price = data.price,
             image = data.image,
             url = data.url,
-            pdf = data.pdf
+            language = data.language
         )
     }
 }
