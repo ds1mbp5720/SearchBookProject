@@ -28,15 +28,16 @@ class MainViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application){
     // 상태에 맞춰 상단 검색 바 갱신
-    val searchState: SearchState = SearchState(query = TextFieldValue(""), focused = false, searching = false, searched = false)
+    val searchState: SearchState = SearchState(query = TextFieldValue(""), focused = false, searching = false, searched = false, noResult = false)
     private val _searchBookList: MutableStateFlow<PagingData<BookModel>> = MutableStateFlow(value = PagingData.empty())
     val searchBookList: StateFlow<PagingData<BookModel>> = _searchBookList.asStateFlow()
     fun searchBook(query: String){
         viewModelScope.launch {
             bookRepository.searchBook(query = query)
                 .cachedIn(viewModelScope)
-                .collect{
-                    _searchBookList.emit(it)
+                .distinctUntilChanged()
+                .collectLatest{
+                    _searchBookList.value = it
                 }
         }
     }

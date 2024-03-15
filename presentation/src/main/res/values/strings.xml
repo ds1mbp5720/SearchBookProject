@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="str_search_hint">검색어 입력</string>
+    <string name="str_no_result">검색 결과가 없습니다.</string>
 </resources>
