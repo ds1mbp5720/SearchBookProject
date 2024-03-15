@@ -18,8 +18,8 @@ class SearchState(
     var noResult by mutableStateOf(noResult) // 검색결과 없는지 여부
     val searchDisplay: SearchDisplay
         get() = when { // 검색창의 현 상태값에 따른 보여줄 화면 정의를 위한 값 세팅부분
-            !searched && !focused && query.text.isEmpty() -> SearchDisplay.StandBy
-            !searched && focused -> SearchDisplay.StandBy
+            !searched || searching -> SearchDisplay.StandBy
+            query.text.isEmpty()-> SearchDisplay.StandBy
             else -> SearchDisplay.Results
         }
 }

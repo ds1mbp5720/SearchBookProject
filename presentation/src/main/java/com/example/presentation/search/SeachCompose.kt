@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -16,7 +14,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -59,7 +57,8 @@ fun SearchBar(
     searching: Boolean,
     modifier: Modifier = Modifier
 ){
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val keyboardController = LocalSoftwareKeyboardController.current // 특정 행동들 이후 키보드 visible 조정을 위한 controller
+    val focusManager = LocalFocusManager.current // EditText focus 조정
     MainSurface(
         modifier = modifier
             .padding(horizontal = 48.dp, vertical = 8.dp)
@@ -88,6 +87,7 @@ fun SearchBar(
                         onSearch = {
                             onSearch.invoke()
                             keyboardController?.hide()
+                            focusManager.clearFocus(true)
                         }
                     ),
                     modifier = Modifier
@@ -111,6 +111,8 @@ fun SearchBar(
                         onClick = {
                             onSearch.invoke()
                             keyboardController?.hide()
+                            focusManager.clearFocus(true)
+                            onSearchFocusChange(false)
                         }
                     ) {
                         Icon(

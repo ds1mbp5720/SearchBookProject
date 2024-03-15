@@ -22,6 +22,7 @@ fun BookSearchAppCompose(){
             navController = bookSearchNavController.navController,
             startDestination = BookSearchDestination.MAIN
         ){
+            mainViewModel.getNewBookList()
             composable(BookSearchDestination.MAIN) { from ->
                 MainScreen(onBookClick = {id -> bookSearchNavController.navigateToBookDetail(id, from)}, viewModel = mainViewModel)
             }

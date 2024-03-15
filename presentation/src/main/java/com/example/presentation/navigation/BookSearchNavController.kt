@@ -25,8 +25,9 @@ fun rememberBookSearchNavController(
 class BookSearchNavController(
   val navController: NavHostController
 ) {
+    // 상단 뒤로 가기 클릭 화면 이동
     fun upPress() { navController.navigateUp() }
-
+    // 책 상세 보기 화면 이동
     fun navigateToBookDetail(bookId: Long, from: NavBackStackEntry) {
         if(from.lifeCycleIsResume()){
             navController.navigate("${BookSearchDestination.DETAIL}/$bookId")
