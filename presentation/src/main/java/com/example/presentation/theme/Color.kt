@@ -11,6 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val Neutral7 = Color(0xde000000)
+val Neutral6 = Color(0x99000000)
 val Neutral5 = Color(0x61000000)
 val Neutral4 = Color(0x1f000000)
 

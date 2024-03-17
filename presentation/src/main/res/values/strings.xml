@@ -2,4 +2,14 @@
 <resources>
     <string name="str_search_hint">검색어 입력</string>
     <string name="str_no_result">검색 결과가 없습니다.</string>
+
+    <string name="str_detail_title">상세 정보</string>
+    <string name="str_publisher">출판사</string>
+    <string name="str_rating">평점</string>
+    <string name="str_year">출판 년도</string>
+    <string name="str_page">쪽수</string>
+    <string name="str_link">링크</string>
+    <string name="str_language">언어</string>
+    <string name="str_see_more">더보기</string>
+    <string name="str_see_less">접기</string>
 </resources>
