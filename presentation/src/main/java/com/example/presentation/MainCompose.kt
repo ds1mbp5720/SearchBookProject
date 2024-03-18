@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.lerp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.example.domain.model.BookModel
 import com.example.presentation.book.BookItemGrid
 import com.example.presentation.book.BookItemList
@@ -96,7 +97,7 @@ fun MainScreen(
                     refreshing = false
                 }
                 loadState.append is LoadState.NotLoading -> {
-                    if(this.loadState.append.endOfPaginationReached){ // 검색 결과 없는 경우
+                    if(this.loadState.append.endOfPaginationReached && this.itemCount == 0){ // 검색 결과 없는 경우
                         Toast.makeText(context, context.getString(R.string.str_no_result), Toast.LENGTH_SHORT).show()
                         viewModel.searchState.searching = false
                         viewModel.searchState.noResult = true
@@ -269,7 +270,6 @@ fun SearchBookListBody(modifier: Modifier, listType: Boolean, searchResult: Bool
                 items(
                     searchBookList.itemCount,
                     key = {
-                        Log.e("","페이징 id key: $it / ${searchBookList.peek(it)?.isbn13}")
                         searchBookList.peek(it)?.isbn13 ?: it
                     },
                 ) {
@@ -289,7 +289,7 @@ fun SearchBookListBody(modifier: Modifier, listType: Boolean, searchResult: Bool
                 items(
                     count = searchBookList.itemCount,
                     key = {
-                        searchBookList.peek(it)?.isbn13 ?: 0
+                        searchBookList.peek(it)!!.isbn13
                     }
                 ) {
                     searchBookList.itemSnapshotList[it]?.let { it1 ->
