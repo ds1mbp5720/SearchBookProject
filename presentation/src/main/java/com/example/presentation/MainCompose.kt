@@ -273,7 +273,7 @@ fun SearchBookListBody(modifier: Modifier, listType: Boolean, searchResult: Bool
                         searchBookList.peek(it)?.isbn13 ?: it
                     },
                 ) {
-                    searchBookList.itemSnapshotList[it]?.let { it1 ->
+                    searchBookList[it]?.let { it1 ->
                         BookItemList(
                             book = it1,
                             onBookClick = onBookClick
@@ -292,7 +292,7 @@ fun SearchBookListBody(modifier: Modifier, listType: Boolean, searchResult: Bool
                         searchBookList.peek(it)!!.isbn13
                     }
                 ) {
-                    searchBookList.itemSnapshotList[it]?.let { it1 ->
+                    searchBookList[it]?.let { it1 ->
                         BookItemGrid(
                             book = it1,
                             onBookClick = onBookClick,
