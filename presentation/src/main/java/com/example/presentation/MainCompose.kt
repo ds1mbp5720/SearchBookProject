@@ -1,5 +1,6 @@
 package com.example.presentation
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -178,7 +179,10 @@ fun MainScreen(
                             .pullRefresh(scrollState),
                         listType = listType,
                         newBookList = it.books,
-                        onBookClick = onBookClick
+                        onBookClick = {bookId ->
+                            viewModel.getDetailBook(bookId.toString())
+                            onBookClick.invoke(bookId)
+                        }
                     )
                 }
             }
@@ -189,7 +193,11 @@ fun MainScreen(
                     listType = listType,
                     searchResult = viewModel.searchState.noResult,
                     searchBookList = searchBookList,
-                    onBookClick = onBookClick)
+                    onBookClick = {bookId ->
+                        viewModel.getDetailBook(bookId.toString())
+                        onBookClick.invoke(bookId)
+                    }
+                )
             }
         }
     }
@@ -261,6 +269,7 @@ fun SearchBookListBody(modifier: Modifier, listType: Boolean, searchResult: Bool
                 items(
                     searchBookList.itemCount,
                     key = {
+                        Log.e("","페이징 id key: $it / ${searchBookList.peek(it)?.isbn13}")
                         searchBookList.peek(it)?.isbn13 ?: it
                     },
                 ) {

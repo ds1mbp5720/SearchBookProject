@@ -29,9 +29,9 @@ fun BookSearchAppCompose(){
             composable("${BookSearchDestination.DETAIL}/{${BookSearchDestination.BOOK_ID}}",
                 arguments = listOf(navArgument(BookSearchDestination.BOOK_ID) { type = NavType.LongType })
             ) {navBackStackEntry ->
-                val arguments = requireNotNull(navBackStackEntry.arguments)
-                val bookId = arguments.getLong(BookSearchDestination.BOOK_ID)
-                mainViewModel.getDetailBook(bookId.toString())
+                // getDetail 호출 위치 변경으로 bookId 가져오는 해당 부분 현재 미사용
+                /*val arguments = requireNotNull(navBackStackEntry.arguments)
+                val bookId = arguments.getLong(BookSearchDestination.BOOK_ID)*/
                 DetailBookScreen(upPress = {bookSearchNavController.upPress()}, viewModel = mainViewModel)
             }
         }

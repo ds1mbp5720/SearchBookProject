@@ -52,14 +52,14 @@ import com.example.presentation.theme.BookSearchTheme
 import com.example.presentation.theme.Neutral5
 import com.example.presentation.utils.mirroringBackIcon
 
-private val titleHeight = 160.dp
-private val gradientScroll = 180.dp
-private val imageOverlap = 115.dp
-private val minTitleOffset = 56.dp
+private val gradientScroll = 180.dp // Body 영역 Image 부분 상단 간격
+private val imageOverlap = 115.dp //image와 일부 영역 겹치는 부분 고려한 사이즈
 private val minImageOffset = 12.dp
-private val maxTitleOffset = imageOverlap + minTitleOffset + gradientScroll
 private val expandedImageSize = 300.dp
 private val collapsedImageSize = 90.dp
+private val titleHeight = 160.dp
+private val minTitleOffset = 56.dp
+private val maxTitleOffset = imageOverlap + minTitleOffset + gradientScroll
 private val horizontalPadding = Modifier.padding(horizontal = 24.dp)
 
 @Composable
@@ -95,12 +95,13 @@ fun DetailBookScreen(
                 book = detailBookInfo,
                 scrollProvider = { scroll.value }
             )
-            Image(imageUrl = detailBookInfo.image, scrollProvider = { scroll.value })
+            BookImage(imageUrl = detailBookInfo.image, scrollProvider = { scroll.value })
         }
     }
 }
+
 @Composable
-private fun Image(
+private fun BookImage(
     imageUrl: String,
     scrollProvider: () -> Int
 ){
@@ -121,6 +122,13 @@ private fun Image(
     }
 
 }
+
+/**
+ * BookImage 스크롤 맞춰 size 조정 함수
+ * imageWidth:
+ * imageY: Title 간격 유지 및 상단 간격 유지
+ * imageX: (화면 크기 - 이미지 사이즈) / 2 를 통해 이미지 크기 변화에 맞춰 중앙 위치
+ */
 @Composable
 private fun CollapsingImageLayout(
     collapseFractionProvider: () -> Float,
@@ -154,6 +162,12 @@ private fun CollapsingImageLayout(
         }
     }
 }
+
+/**
+ * 제목 및 기본 정보 Component
+ * 제목, 부제목, 지은이, 가격
+ *
+ */
 @Composable
 private fun Title(
     book: BookDetailModel,
@@ -210,6 +224,11 @@ private fun Title(
     }
 }
 
+/**
+ * 세부 내용 component
+ * 책 설명, 링크, 출판사, 출판 연도, 쪽수, 언어, 평점
+ * 제목, 이미지 표시와 스크롤 및 겹치는 부분 처리를 위한 Spacer 추가
+ */
 @Composable
 private fun Body(
     book: BookDetailModel,
