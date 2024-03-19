@@ -30,14 +30,14 @@ https://github.com/ds1mbp5720/MovieSearchPJ/assets/37658906/3091bb86-347a-4b31-a
 
 ------------
 ### 실행사진
-1. 메인 화면 (grid, list)
+1. 메인 화면 (grid, list)  
 ![KakaoTalk_20240319_212436115](https://github.com/ds1mbp5720/MovieSearchPJ/assets/37658906/a8ff395d-25e4-4878-b39d-6c17951ab60e)
 ![KakaoTalk_20240319_212436115_01](https://github.com/ds1mbp5720/MovieSearchPJ/assets/37658906/6a21f035-b1bb-42ee-9b02-f217ccd87a44)
 
-2. 상세보기
+2. 상세보기  
 ![KakaoTalk_20240319_212436115_02](https://github.com/ds1mbp5720/MovieSearchPJ/assets/37658906/50a6991d-52ab-4cee-9cec-74a4238ca787)
 
-3. 검색
+3. 검색  
 ![KakaoTalk_20240319_212436115_04](https://github.com/ds1mbp5720/MovieSearchPJ/assets/37658906/b939f7a7-b4d6-42f8-a2e6-eb58f7de415e)
 ![KakaoTalk_20240319_212436115_05](https://github.com/ds1mbp5720/MovieSearchPJ/assets/37658906/c2bb8cdf-f48d-4cb0-b08c-6e9d3d16adec)
 
