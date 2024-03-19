@@ -1,5 +1,5 @@
 # SearchBookProject
-## 책검색 App('24.03.13 ~ )
+## 책검색 App('24.03.13 ~ 03.19)
 > 1. 책 검색 및 상세 정보 제공
 > 2. 개발 플랫폼:  Android Studio, API Level 34
 ------------
