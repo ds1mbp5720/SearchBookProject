@@ -1,7 +1,8 @@
 package com.example.presentation
 
-import android.util.Log
+import android.app.Activity
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,10 +47,10 @@ import androidx.compose.ui.unit.lerp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
 import com.example.domain.model.BookModel
 import com.example.presentation.book.BookItemGrid
 import com.example.presentation.book.BookItemList
+import com.example.presentation.component.BaseDialog
 import com.example.presentation.search.SearchBar
 import com.example.presentation.search.SearchDisplay
 import com.example.presentation.theme.BookSearchTheme
@@ -62,12 +63,13 @@ fun MainScreen(
     viewModel: MainViewModel
 ) {
     val context = LocalContext.current
-
+    val activity = LocalContext.current as Activity
     val searchBookList: LazyPagingItems<BookModel> = viewModel.searchBookList.collectAsLazyPagingItems()
     val newBookList = viewModel.newBookList.collectAsState().value
     val loadingState = viewModel.loading.collectAsState()
     var listType by remember { mutableStateOf(false) } // 책 리스트 종류: true -> list, false -> grid
     var refreshing by remember { mutableStateOf(false) }
+    val showDialog = remember { mutableStateOf(false) } // 종료 확인 Dialog 노출 상태
     val scrollState = rememberPullRefreshState(
         refreshing = refreshing,
         onRefresh = {
@@ -201,6 +203,23 @@ fun MainScreen(
                 )
             }
         }
+    }
+    BackHandler(
+        enabled = true
+    ) {
+        showDialog.value = true
+    }
+    if(showDialog.value){
+        BaseDialog(
+            title = stringResource(id = R.string.str_app_exit_title),
+            dismissAction = {
+                showDialog.value = false
+            },
+            confirmAction = {
+                showDialog.value = true
+                activity.finish()
+            }
+        )
     }
 }
 /**

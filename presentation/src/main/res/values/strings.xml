@@ -12,4 +12,8 @@
     <string name="str_language">언어</string>
     <string name="str_see_more">더보기</string>
     <string name="str_see_less">접기</string>
+
+    <string name="str_app_exit_title">앱을 정말 종료하시겠습니까?</string>
+    <string name="str_confirm">확인</string>
+    <string name="str_cancel">취소</string>
 </resources>
