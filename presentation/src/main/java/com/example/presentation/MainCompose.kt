@@ -167,27 +167,41 @@ fun MainScreen(
         }
         when (viewModel.searchState.searchDisplay) {
             SearchDisplay.StandBy -> {
-                newBookList?.let {
-                    NewBookListBody(modifier = Modifier.pullRefresh(scrollState),
-                        listType = listType,
-                        newBookList = it.books,
+                if (newBookList != null) {
+                    BasicBookListBody(
+                        modifier = Modifier.pullRefresh(scrollState),
+                        listType = listType ,
+                        newBookList = newBookList.books,
                         onBookClick = { bookId ->
                             viewModel.getDetailBook(bookId.toString())
                             onBookClick.invoke(bookId)
-                        })
+                        }
+                    )
                 }
             }
 
             SearchDisplay.Results -> {
-
-                SearchBookListBody(modifier = Modifier.pullRefresh(scrollState),
-                    listType = listType,
-                    searchResult = viewModel.searchState.noResult,
-                    searchBookList = searchBookList,
-                    onBookClick = { bookId ->
-                        viewModel.getDetailBook(bookId.toString())
-                        onBookClick.invoke(bookId)
-                    })
+                if (viewModel.searchState.noResult) {
+                    Text(
+                        text = stringResource(id = R.string.str_no_result),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = BookSearchTheme.colors.textPrimary,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 24.dp)
+                    )
+                } else {
+                    BasicBookListBody(
+                        modifier = Modifier.pullRefresh(scrollState),
+                        listType = listType ,
+                        searchBookList = searchBookList,
+                        onBookClick = { bookId ->
+                            viewModel.getDetailBook(bookId.toString())
+                            onBookClick.invoke(bookId)
+                        }
+                    )
+                }
             }
         }
     }
@@ -207,91 +221,69 @@ fun MainScreen(
 }
 
 /**
- * New 책 리스트 함수
- *  listType: Boolean : 책 리스트 종류 -> true : list, false : grid
- * newBookList: List<BookModel> :  New 책 리스트
- * onBookClick: (Long) -> Unit : 책 상세 화면 이동
+ * 책 리스트 compose
+ * new 와 search 의 타입이 List<> 와 LazyPagingItems 로 달라서
+ * 두개의 타입을 기본으로 null로 가지고있고 null이 아닌 타입에 맞춰 표시
  */
 @Composable
-fun NewBookListBody(modifier: Modifier, listType: Boolean, newBookList: List<BookModel>, onBookClick: (Long) -> Unit) {
-    val listState = rememberLazyListState()
-    val gridState = rememberLazyGridState()
+fun BasicBookListBody(
+    modifier: Modifier,
+    listType: Boolean,
+    newBookList: List<BookModel>? = null,
+    searchBookList: LazyPagingItems<BookModel>? = null,
+    onBookClick: (Long) -> Unit
+) {
+    val newType = newBookList != null
+    val bookItemCount = if (newType) newBookList!!.size else searchBookList!!.itemCount
     if (listType) {
         LazyColumn(
-            modifier = modifier, contentPadding = PaddingValues(top = 6.dp, bottom = 6.dp), state = listState, userScrollEnabled = true
+            modifier = modifier, contentPadding = PaddingValues(top = 6.dp, bottom = 6.dp)
         ) {
-            items(newBookList.size, key = { newBookList[it].isbn13 }) { book ->
-                BookItemList(
-                    book = newBookList[book], onBookClick = onBookClick
-                )
+            items(
+                count = bookItemCount,
+                key = {
+                    if (newType) {
+                        newBookList!![it].isbn13
+                    } else {
+                        searchBookList!!.peek(it)!!.isbn13
+                    }
+                }
+            ) { book ->
+                (if (newType) {
+                    newBookList!![book]
+                } else {
+                    searchBookList!![book]
+                })?.let {
+                    BookItemList(
+                        book = it,
+                        onBookClick = onBookClick
+                    )
+                }
             }
         }
     } else {
         LazyVerticalGrid(
-            columns = GridCells.Fixed(3), modifier = modifier, state = gridState
+            columns = GridCells.Fixed(3), modifier = modifier
         ) {
-            items(newBookList.size, key = { newBookList[it].isbn13 }) { book ->
-                BookItemGrid(
-                    book = newBookList[book], onBookClick = onBookClick
-                )
-            }
-        }
-    }
-}
-
-/**
- * 검색결과 리스트 함수
- * searchResult: Boolean, : 검색 성공 여부: true -> 책 리스트 정상 출력, false -> 검색 실패 Text 출력
- * searchBookList: LazyPagingItems<BookModel> : 검색 결과 책 리스트
- * onBookClick: (Long) -> Unit : 책 상세 화면 이동
- */
-@Composable
-fun SearchBookListBody(
-    modifier: Modifier, listType: Boolean, searchResult: Boolean, searchBookList: LazyPagingItems<BookModel>, onBookClick: (Long) -> Unit
-) {
-    if (searchResult) {
-        Text(
-            text = stringResource(id = R.string.str_no_result),
-            style = MaterialTheme.typography.titleLarge,
-            color = BookSearchTheme.colors.textPrimary,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp)
-        )
-    } else {
-        if (listType) {
-            LazyColumn(
-                modifier = modifier,
-                contentPadding = PaddingValues(top = 6.dp, bottom = 6.dp),
-            ) {
-                items(
-                    searchBookList.itemCount,
-                    key = {
-                        searchBookList.peek(it)?.isbn13 ?: it
-                    },
-                ) {
-                    searchBookList[it]?.let { it1 ->
-                        BookItemList(
-                            book = it1, onBookClick = onBookClick
-                        )
+            items(
+                count = bookItemCount,
+                key = {
+                    if (newType) {
+                        newBookList!![it].isbn13
+                    } else {
+                        searchBookList!!.peek(it)!!.isbn13
                     }
                 }
-            }
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                modifier = modifier,
-            ) {
-                items(count = searchBookList.itemCount, key = {
-                    searchBookList.peek(it)!!.isbn13
-                }) {
-                    searchBookList[it]?.let { it1 ->
-                        BookItemGrid(
-                            book = it1,
-                            onBookClick = onBookClick,
-                        )
-                    }
+            ) { book ->
+                (if (newType) {
+                    newBookList!![book]
+                } else {
+                    searchBookList!![book]
+                })?.let {
+                    BookItemGrid(
+                        book = it,
+                        onBookClick = onBookClick
+                    )
                 }
             }
         }
