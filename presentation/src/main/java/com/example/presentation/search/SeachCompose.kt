@@ -56,21 +56,21 @@ fun SearchBar(
     onClearQuery: () -> Unit,
     searching: Boolean,
     modifier: Modifier = Modifier
-){
+) {
     val keyboardController = LocalSoftwareKeyboardController.current // 특정 행동들 이후 키보드 visible 조정을 위한 controller
     val focusManager = LocalFocusManager.current // EditText focus 조정
     MainSurface(
         modifier = modifier
             .padding(horizontal = 48.dp, vertical = 8.dp)
-    ){
-        Box(modifier = Modifier.fillMaxSize()){
-            if(query.text.isEmpty()) SearchHint(Modifier.align(Alignment.Center))
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (query.text.isEmpty()) SearchHint(Modifier.align(Alignment.Center))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .wrapContentHeight()
-            ){
-                if(searchFocused) {
+            ) {
+                if (searchFocused) {
                     IconButton(onClick = onClearQuery) {
                         Icon(
                             imageVector = mirroringBackIcon(),
@@ -96,17 +96,17 @@ fun SearchBar(
                             onSearchFocusChange(it.isFocused)
                         }
                 )
-                if(searching){
+                if (searching) {
                     CircularProgressIndicator(
                         color = BookSearchTheme.colors.textPrimary,
                         modifier = Modifier
                             .padding(horizontal = 6.dp)
                             .size(36.dp)
                     )
-                } else{
+                } else {
                     Spacer(modifier = Modifier.width(48.dp))
                 }
-                if(searchFocused) {
+                if (searchFocused) {
                     IconButton(
                         onClick = {
                             onSearch.invoke()
@@ -131,11 +131,11 @@ fun SearchBar(
  * 검색어 입력 전 간단한 표시 view
  */
 @Composable
-fun SearchHint(modifier: Modifier){
+fun SearchHint(modifier: Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.wrapContentSize()
-    ){
+    ) {
         Icon(
             imageVector = Icons.Outlined.Search,
             tint = BookSearchTheme.colors.iconSecondary,

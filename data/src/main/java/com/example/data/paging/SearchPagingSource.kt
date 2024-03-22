@@ -45,5 +45,4 @@ class SearchPagingSource (
             return LoadResult.Error(exception)
         }
     }
-
 }

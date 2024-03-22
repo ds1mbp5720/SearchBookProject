@@ -14,25 +14,26 @@ import com.example.presentation.navigation.rememberBookSearchNavController
 import com.example.presentation.theme.BookSearchProjectTheme
 
 @Composable
-fun BookSearchAppCompose(){
+fun BookSearchAppCompose() {
     val bookSearchNavController = rememberBookSearchNavController()
-    BookSearchProjectTheme{
+    BookSearchProjectTheme {
         val mainViewModel: MainViewModel = viewModel()
         NavHost(
             navController = bookSearchNavController.navController,
             startDestination = BookSearchDestination.MAIN
-        ){
+        ) {
             mainViewModel.getNewBookList()
             composable(BookSearchDestination.MAIN) { from ->
-                MainScreen(onBookClick = {id -> bookSearchNavController.navigateToBookDetail(id, from)}, viewModel = mainViewModel)
+                MainScreen(onBookClick = { id -> bookSearchNavController.navigateToBookDetail(id, from) }, viewModel = mainViewModel)
             }
-            composable("${BookSearchDestination.DETAIL}/{${BookSearchDestination.BOOK_ID}}",
+            composable(
+                "${BookSearchDestination.DETAIL}/{${BookSearchDestination.BOOK_ID}}",
                 arguments = listOf(navArgument(BookSearchDestination.BOOK_ID) { type = NavType.LongType })
-            ) {navBackStackEntry ->
+            ) { navBackStackEntry ->
                 // getDetail 호출 위치 변경으로 bookId 가져오는 해당 부분 현재 미사용
                 /*val arguments = requireNotNull(navBackStackEntry.arguments)
                 val bookId = arguments.getLong(BookSearchDestination.BOOK_ID)*/
-                DetailBookScreen(upPress = {bookSearchNavController.upPress()}, viewModel = mainViewModel)
+                DetailBookScreen(upPress = { bookSearchNavController.upPress() }, viewModel = mainViewModel)
             }
         }
     }

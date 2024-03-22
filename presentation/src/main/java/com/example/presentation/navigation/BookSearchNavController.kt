@@ -23,16 +23,20 @@ fun rememberBookSearchNavController(
 
 @Stable
 class BookSearchNavController(
-  val navController: NavHostController
+    val navController: NavHostController
 ) {
     // 상단 뒤로 가기 클릭 화면 이동
-    fun upPress() { navController.navigateUp() }
+    fun upPress() {
+        navController.navigateUp()
+    }
+
     // 책 상세 보기 화면 이동
     fun navigateToBookDetail(bookId: Long, from: NavBackStackEntry) {
-        if(from.lifeCycleIsResume()){
+        if (from.lifeCycleIsResume()) {
             navController.navigate("${BookSearchDestination.DETAIL}/$bookId")
         }
     }
 }
+
 private fun NavBackStackEntry.lifeCycleIsResume() =
     this.lifecycle.currentState == Lifecycle.State.RESUMED

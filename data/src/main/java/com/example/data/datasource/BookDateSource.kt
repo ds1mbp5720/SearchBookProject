@@ -15,7 +15,7 @@ interface BookDateSource {
     ): SearchData
 
     @GET("new")
-    suspend fun getNewBookList() : NewBookData
+    suspend fun getNewBookList(): NewBookData
 
     @GET("books/{isbn13}")
     suspend fun getDetailBook(

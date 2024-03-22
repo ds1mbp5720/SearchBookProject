@@ -20,11 +20,12 @@ object NetWorkModule {
     @Provides
     @Singleton
     fun provideInterceptor(@ApplicationContext context: Context): Interceptor {
-        return Interceptor{
+        return Interceptor {
             val requestBuilder = it.request().newBuilder()
             it.proceed(requestBuilder.build())
         }
     }
+
     @Provides
     @Singleton
     internal fun provideInterceptor(): HttpLoggingInterceptor {
@@ -32,6 +33,7 @@ object NetWorkModule {
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         return interceptor
     }
+
     @Provides
     @Singleton
     fun providesOkHttpClient(interceptor: Interceptor, httpInterceptor: HttpLoggingInterceptor): OkHttpClient {
@@ -43,6 +45,7 @@ object NetWorkModule {
             .writeTimeout(10L, TimeUnit.SECONDS)
             .build()
     }
+
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {

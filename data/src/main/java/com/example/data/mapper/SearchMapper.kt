@@ -17,6 +17,7 @@ object SearchMapper {
         )
     }
 }
+
 fun SearchData.toDomain(): SearchModel {
     return SearchMapper.toDomain(this)
 }

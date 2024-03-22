@@ -58,9 +58,7 @@ import com.example.presentation.theme.BookSearchTheme
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
-    onBookClick: (Long) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: MainViewModel
+    onBookClick: (Long) -> Unit, modifier: Modifier = Modifier, viewModel: MainViewModel
 ) {
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
@@ -70,27 +68,25 @@ fun MainScreen(
     var listType by remember { mutableStateOf(false) } // 책 리스트 종류: true -> list, false -> grid
     var refreshing by remember { mutableStateOf(false) }
     val showDialog = remember { mutableStateOf(false) } // 종료 확인 Dialog 노출 상태
-    val scrollState = rememberPullRefreshState(
-        refreshing = refreshing,
-        onRefresh = {
-            // 현재 화면 상태에 따른 api 호출 종류 분할
-            when(viewModel.searchState.searchDisplay) {
-                SearchDisplay.Results -> {
-                    refreshing = true
-                    viewModel.searchBook(viewModel.searchState.query.text)
-                }
-                SearchDisplay.StandBy -> {
-                    refreshing = true
-                    viewModel.getNewBookList()
-                }
+    val scrollState = rememberPullRefreshState(refreshing = refreshing, onRefresh = {
+        // 현재 화면 상태에 따른 api 호출 종류 분할
+        when (viewModel.searchState.searchDisplay) {
+            SearchDisplay.Results -> {
+                refreshing = true
+                viewModel.searchBook(viewModel.searchState.query.text)
+            }
+
+            SearchDisplay.StandBy -> {
+                refreshing = true
+                viewModel.getNewBookList()
             }
         }
-    )
-    LaunchedEffect(key1 = loadingState.value){
+    })
+    LaunchedEffect(key1 = loadingState.value) {
         refreshing = loadingState.value
     }
     // 검색 결과 flow 동작 상태
-    LaunchedEffect(key1 = searchBookList.loadState ){
+    LaunchedEffect(key1 = searchBookList.loadState) {
         searchBookList.apply {
             when {
                 loadState.append is LoadState.Loading -> {
@@ -98,16 +94,19 @@ fun MainScreen(
                     viewModel.searchState.noResult = false
                     refreshing = false
                 }
+
                 loadState.append is LoadState.NotLoading -> {
-                    if(this.loadState.append.endOfPaginationReached && this.itemCount == 0){ // 검색 결과 없는 경우
+                    if (this.loadState.append.endOfPaginationReached && this.itemCount == 0) { // 검색 결과 없는 경우
                         Toast.makeText(context, context.getString(R.string.str_no_result), Toast.LENGTH_SHORT).show()
                         viewModel.searchState.searching = false
                         viewModel.searchState.noResult = true
                     }
                 }
+
                 loadState.append is LoadState.Error -> {
                     Toast.makeText(context, "Error:" + (loadState.append as LoadState.Error).error.message, Toast.LENGTH_SHORT).show()
                 }
+
                 loadState.refresh is LoadState.Error -> {
                     Toast.makeText(context, "Error:" + (loadState.refresh as LoadState.Error).error.message, Toast.LENGTH_SHORT).show()
                 }
@@ -120,38 +119,31 @@ fun MainScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
-        ){
+        ) {
             SearchBar(
                 query = viewModel.searchState.query,
                 onQueryChange = {
                     viewModel.searchState.query = it
-                    if(viewModel.searchState.query.text.isEmpty())
-                        viewModel.searchState.searched = false
-                                },
+                    if (viewModel.searchState.query.text.isEmpty()) viewModel.searchState.searched = false
+                },
                 onSearch = {
                     viewModel.searchBook(viewModel.searchState.query.text)
                     viewModel.searchState.searching = true
                     viewModel.searchState.searched = true
                 },
                 searchFocused = viewModel.searchState.focused || viewModel.searchState.query.text != "",
-                onSearchFocusChange = {viewModel.searchState.focused = it},
+                onSearchFocusChange = { viewModel.searchState.focused = it },
                 onClearQuery = {
                     viewModel.searchState.query = TextFieldValue("")
                     viewModel.searchState.searched = false
-                               },
+                },
                 searching = viewModel.searchState.searching
             )
-            IconButton(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd),
-                onClick = {
-                    listType = !listType
-                }
-            ) {
+            IconButton(modifier = Modifier.align(Alignment.CenterEnd), onClick = {
+                listType = !listType
+            }) {
                 Icon(
-                    imageVector = Icons.Outlined.List,
-                    tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = "list_type"
+                    imageVector = Icons.Outlined.List, tint = MaterialTheme.colorScheme.primary, contentDescription = "list_type"
                 )
             }
         }
@@ -163,11 +155,10 @@ fun MainScreen(
                     if (refreshing) 90.dp
                     else lerp(0.dp, 90.dp, scrollState.progress.coerceIn(0f..1f))
                 )
-        ){
-            if(refreshing){
+        ) {
+            if (refreshing) {
                 CircularProgressIndicator(
-                    color = BookSearchTheme.colors.textPrimary,
-                    modifier = Modifier
+                    color = BookSearchTheme.colors.textPrimary, modifier = Modifier
                         .padding(horizontal = 6.dp)
                         .align(Alignment.Center)
                         .size(70.dp)
@@ -177,30 +168,26 @@ fun MainScreen(
         when (viewModel.searchState.searchDisplay) {
             SearchDisplay.StandBy -> {
                 newBookList?.let {
-                    NewBookListBody(
-                        modifier = Modifier
-                            .pullRefresh(scrollState),
+                    NewBookListBody(modifier = Modifier.pullRefresh(scrollState),
                         listType = listType,
                         newBookList = it.books,
-                        onBookClick = {bookId ->
+                        onBookClick = { bookId ->
                             viewModel.getDetailBook(bookId.toString())
                             onBookClick.invoke(bookId)
-                        }
-                    )
+                        })
                 }
             }
+
             SearchDisplay.Results -> {
-                SearchBookListBody(
-                    modifier = Modifier
-                        .pullRefresh(scrollState),
+
+                SearchBookListBody(modifier = Modifier.pullRefresh(scrollState),
                     listType = listType,
                     searchResult = viewModel.searchState.noResult,
                     searchBookList = searchBookList,
-                    onBookClick = {bookId ->
+                    onBookClick = { bookId ->
                         viewModel.getDetailBook(bookId.toString())
                         onBookClick.invoke(bookId)
-                    }
-                )
+                    })
             }
         }
     }
@@ -209,19 +196,16 @@ fun MainScreen(
     ) {
         showDialog.value = true
     }
-    if(showDialog.value){
-        BaseDialog(
-            title = stringResource(id = R.string.str_app_exit_title),
-            dismissAction = {
-                showDialog.value = false
-            },
-            confirmAction = {
-                showDialog.value = true
-                activity.finish()
-            }
-        )
+    if (showDialog.value) {
+        BaseDialog(title = stringResource(id = R.string.str_app_exit_title), dismissAction = {
+            showDialog.value = false
+        }, confirmAction = {
+            showDialog.value = true
+            activity.finish()
+        })
     }
 }
+
 /**
  * New 책 리스트 함수
  *  listType: Boolean : 책 리스트 종류 -> true : list, false : grid
@@ -229,35 +213,28 @@ fun MainScreen(
  * onBookClick: (Long) -> Unit : 책 상세 화면 이동
  */
 @Composable
-fun NewBookListBody(modifier: Modifier, listType: Boolean, newBookList: List<BookModel>, onBookClick: (Long) -> Unit){
+fun NewBookListBody(modifier: Modifier, listType: Boolean, newBookList: List<BookModel>, onBookClick: (Long) -> Unit) {
     val listState = rememberLazyListState()
     val gridState = rememberLazyGridState()
-    if(listType){
+    if (listType) {
         LazyColumn(
-            modifier = modifier,
-            contentPadding = PaddingValues(top = 6.dp, bottom = 6.dp),
-            state = listState,
-            userScrollEnabled = true
+            modifier = modifier, contentPadding = PaddingValues(top = 6.dp, bottom = 6.dp), state = listState, userScrollEnabled = true
         ) {
-            items(newBookList.size, key = {newBookList[it].isbn13}){ book ->
+            items(newBookList.size, key = { newBookList[it].isbn13 }) { book ->
                 BookItemList(
-                    book = newBookList[book],
-                    onBookClick = onBookClick
+                    book = newBookList[book], onBookClick = onBookClick
                 )
             }
         }
     } else {
         LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            modifier = modifier,
-            state = gridState
-        ){
-                items(newBookList.size, key = {newBookList[it].isbn13}){ book ->
-                    BookItemGrid(
-                        book = newBookList[book],
-                        onBookClick = onBookClick
-                    )
-                }
+            columns = GridCells.Fixed(3), modifier = modifier, state = gridState
+        ) {
+            items(newBookList.size, key = { newBookList[it].isbn13 }) { book ->
+                BookItemGrid(
+                    book = newBookList[book], onBookClick = onBookClick
+                )
+            }
         }
     }
 }
@@ -269,8 +246,10 @@ fun NewBookListBody(modifier: Modifier, listType: Boolean, newBookList: List<Boo
  * onBookClick: (Long) -> Unit : 책 상세 화면 이동
  */
 @Composable
-fun SearchBookListBody(modifier: Modifier, listType: Boolean, searchResult: Boolean, searchBookList: LazyPagingItems<BookModel>, onBookClick: (Long) -> Unit){
-    if(searchResult){
+fun SearchBookListBody(
+    modifier: Modifier, listType: Boolean, searchResult: Boolean, searchBookList: LazyPagingItems<BookModel>, onBookClick: (Long) -> Unit
+) {
+    if (searchResult) {
         Text(
             text = stringResource(id = R.string.str_no_result),
             style = MaterialTheme.typography.titleLarge,
@@ -281,7 +260,7 @@ fun SearchBookListBody(modifier: Modifier, listType: Boolean, searchResult: Bool
                 .padding(top = 24.dp)
         )
     } else {
-        if(listType){
+        if (listType) {
             LazyColumn(
                 modifier = modifier,
                 contentPadding = PaddingValues(top = 6.dp, bottom = 6.dp),
@@ -294,8 +273,7 @@ fun SearchBookListBody(modifier: Modifier, listType: Boolean, searchResult: Bool
                 ) {
                     searchBookList[it]?.let { it1 ->
                         BookItemList(
-                            book = it1,
-                            onBookClick = onBookClick
+                            book = it1, onBookClick = onBookClick
                         )
                     }
                 }
@@ -304,13 +282,10 @@ fun SearchBookListBody(modifier: Modifier, listType: Boolean, searchResult: Bool
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
                 modifier = modifier,
-            ){
-                items(
-                    count = searchBookList.itemCount,
-                    key = {
-                        searchBookList.peek(it)!!.isbn13
-                    }
-                ) {
+            ) {
+                items(count = searchBookList.itemCount, key = {
+                    searchBookList.peek(it)!!.isbn13
+                }) {
                     searchBookList[it]?.let { it1 ->
                         BookItemGrid(
                             book = it1,

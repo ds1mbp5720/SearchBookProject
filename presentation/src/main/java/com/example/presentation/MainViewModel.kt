@@ -31,42 +31,43 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val bookRepository: BookRepository,
     application: Application
-) : AndroidViewModel(application){
+) : AndroidViewModel(application) {
     // 상태에 맞춰 상단 검색 바 갱신
     val searchState: SearchState = SearchState(query = TextFieldValue(""), focused = false, searching = false, searched = false, noResult = false)
+
     // api 통신 진행 표시
-    private val _loading =  MutableStateFlow(true)
+    private val _loading = MutableStateFlow(true)
     val loading: StateFlow<Boolean> = _loading.asStateFlow()
 
     private val _searchBookList: MutableStateFlow<PagingData<BookModel>> = MutableStateFlow(value = PagingData.empty())
     val searchBookList: StateFlow<PagingData<BookModel>> = _searchBookList.asStateFlow()
-    fun searchBook(query: String){
+    fun searchBook(query: String) {
         viewModelScope.launch {
             bookRepository.searchBook(query = query)
                 .cachedIn(viewModelScope)
                 //.distinctUntilChanged()
-                .collectLatest{
+                .collectLatest {
                     _searchBookList.value = it
                 }
         }
     }
 
-    private val _newBookList=  MutableStateFlow<NewBookModel?>(null)
+    private val _newBookList = MutableStateFlow<NewBookModel?>(null)
     val newBookList: StateFlow<NewBookModel?> = _newBookList.asStateFlow()
-    fun getNewBookList(){
+    fun getNewBookList() {
         viewModelScope.launch {
             bookRepository.getNewBookList()
                 .onStart { _loading.value = true }
                 .collectLatest {
                     _loading.value = false
                     _newBookList.value = it
-            }
+                }
         }
     }
 
-    private val _detailBook=  MutableStateFlow<BookDetailModel?>(null)
+    private val _detailBook = MutableStateFlow<BookDetailModel?>(null)
     val detailBook: StateFlow<BookDetailModel?> = _detailBook.asStateFlow()
-    fun getDetailBook(isbn13: String){
+    fun getDetailBook(isbn13: String) {
         viewModelScope.launch {
             bookRepository.getDetailBook(isbn13)
                 .collectLatest {

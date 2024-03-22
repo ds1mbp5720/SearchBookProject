@@ -5,7 +5,7 @@ import com.example.domain.model.BookModel
 import com.example.domain.model.NewBookModel
 
 object NewBookMapper {
-    fun toDomain(data: NewBookData): NewBookModel{
+    fun toDomain(data: NewBookData): NewBookModel {
         val bookList = mutableListOf<BookModel>()
         data.books.forEach {
             bookList.add(it.toDomain())
@@ -16,6 +16,7 @@ object NewBookMapper {
         )
     }
 }
+
 fun NewBookData.toDomain(): NewBookModel {
     return NewBookMapper.toDomain(this)
 }

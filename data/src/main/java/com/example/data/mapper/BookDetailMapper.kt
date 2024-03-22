@@ -25,6 +25,7 @@ object BookDetailMapper {
         )
     }
 }
+
 fun BookDetailData.toDomain(): BookDetailModel {
     return BookDetailMapper.toDomain(this)
 }
