@@ -167,10 +167,10 @@ fun MainScreen(
         }
         when (viewModel.searchState.searchDisplay) {
             SearchDisplay.StandBy -> {
-                if (newBookList != null) {
+                if (newBookList != null && !refreshing) {
                     BasicBookListBody(
                         modifier = Modifier.pullRefresh(scrollState),
-                        listType = listType ,
+                        listType = listType,
                         newBookList = newBookList.books,
                         onBookClick = { bookId ->
                             viewModel.getDetailBook(bookId.toString())
@@ -192,15 +192,17 @@ fun MainScreen(
                             .padding(top = 24.dp)
                     )
                 } else {
-                    BasicBookListBody(
-                        modifier = Modifier.pullRefresh(scrollState),
-                        listType = listType ,
-                        searchBookList = searchBookList,
-                        onBookClick = { bookId ->
-                            viewModel.getDetailBook(bookId.toString())
-                            onBookClick.invoke(bookId)
-                        }
-                    )
+                    if (!refreshing) {
+                        BasicBookListBody(
+                            modifier = Modifier.pullRefresh(scrollState),
+                            listType = listType,
+                            searchBookList = searchBookList,
+                            onBookClick = { bookId ->
+                                viewModel.getDetailBook(bookId.toString())
+                                onBookClick.invoke(bookId)
+                            }
+                        )
+                    }
                 }
             }
         }
